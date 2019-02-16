@@ -1,5 +1,5 @@
 var margin = { left:80, right:20, top:50, bottom:100 };
-var height = 500 - margin.top - margin.bottom, 
+var height = 500 - margin.top - margin.bottom,
     width = 800 - margin.left - margin.right;
 
 var g = d3.select("#chart-area")
@@ -7,7 +7,7 @@ var g = d3.select("#chart-area")
         .attr("width", width + margin.left + margin.right)
         .attr("height", height + margin.top + margin.bottom)
     .append("g")
-        .attr("transform", "translate(" + margin.left + 
+        .attr("transform", "translate(" + margin.left +
             ", " + margin.top + ")");
 
 var time = 0;
@@ -65,26 +65,26 @@ var yAxisCall = d3.axisLeft(y)
 g.append("g")
     .attr("class", "y axis")
     .call(yAxisCall);
-	
+
 d3.json("data/data.json").then(function(data) {
-	
+
 	//clean data
 	const formattedData = data.map(function(year) {
-			return year["countries"].filter(function(country) { 
+			return year["countries"].filter(function(country) {
 				var dataExists = (country.income && country.life_exp);
-				return dataExists
+				return dataExists;
 			}).map(function(country) {
 				country.income = +country.income;
 				country.life_exp = +country.life_exp;
 				return country;
 			})
 	});
-	
+
 	console.log(formattedData);
-	
+
 	var circles = g.selectAll("circle").
-	data(formattedData[5], function(d) { 
-		return d.country; 
+	data(formattedData[5], function(d) {
+		return d.country;
 	});
 
 	circles.enter()
@@ -97,12 +97,13 @@ d3.json("data/data.json").then(function(data) {
 		 .attr("cx", function(d){ return x(d.income) })
 		 .attr("r", function(d) {
 			 return Math.sqrt(area(d.population) / Math.PI) });
-			 
-	
+
+	/*
 	d3.interval(function() {
 		update(newData);
 	}, 100);
 })
+/*
 
 /*
 function updateData(data) {
@@ -110,14 +111,13 @@ function updateData(data) {
 						.data(data, function(d) {
 							return d.
 						};
-	
+
 */
+/*
 	circle.exit()
 			.attr("fill", "red")
 			.remove();
-	
-	
-}
+      */
 
 
-
+});
