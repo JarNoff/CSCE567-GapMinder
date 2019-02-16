@@ -82,22 +82,48 @@ d3.json("data/data.json").then(function(data) {
 
 	console.log(formattedData);
 
-	var circles = g.selectAll("circle").
-	data(formattedData[5], function(d) {
-		return d.country;
-	});
+  d3.interval(function(d) {
+    createCircles(formattedData, time);
+  }, 1000);
 
-	circles.enter()
-		 .append("circle")
+});
+
+
+function createCircles(formattedData)
+{
+	var circles = g.selectAll("circle").
+	             data(formattedData[time], function(d) {
+		               return d.country;
+	             });
+
+	circles.transition()
+     .duration(500)
 		 .attr("class", "enter")
 		 .attr("fill", function(d) {
 			 return continentColor(d.continent); })
-		 .merge(circles)
 		 .attr("cy", function(d){ return y(d.life_exp); })
 		 .attr("cx", function(d){ return x(d.income) })
 		 .attr("r", function(d) {
 			 return Math.sqrt(area(d.population) / Math.PI) });
 
+  circles.enter()
+         .append("circle")
+         .attr("class", "enter")
+    		 .attr("fill", function(d) {
+    			 return continentColor(d.continent); })
+    		 .attr("cy", function(d){ return y(d.life_exp); })
+    		 .attr("cx", function(d){ return x(d.income) })
+    		 .attr("r", function(d) {
+    			 return Math.sqrt(area(d.population) / Math.PI) });
+
+  circles.exit()
+         .transition()
+         .duration(500)
+         .remove();
+  var currentYear = 1800 + time;
+  timeLabel.text(currentYear);
+  time = time + 1;
+}
 	/*
 	d3.interval(function() {
 		update(newData);
@@ -118,6 +144,3 @@ function updateData(data) {
 			.attr("fill", "red")
 			.remove();
       */
-
-
-});
