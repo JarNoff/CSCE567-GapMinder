@@ -83,7 +83,12 @@ d3.json("data/data.json").then(function(data) {
 	console.log(formattedData);
 
   d3.interval(function(d) {
-    createCircles(formattedData, time);
+    if (time == 215)
+    {
+      time = 0;
+    }
+
+    createCircles(formattedData);
   }, 1000);
 
 });
@@ -120,6 +125,7 @@ function createCircles(formattedData)
          .transition()
          .duration(500)
          .remove();
+
   var currentYear = 1800 + time;
   timeLabel.text(currentYear);
   time = time + 1;
