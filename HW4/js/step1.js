@@ -1,3 +1,12 @@
+/*
+*   Name: Jaret Noffsinger
+*   CSCE 567 GapMinder Clone
+*   Assignment 4
+*   2/20/2019
+*/
+
+
+
 var margin = { left:80, right:20, top:50, bottom:100 };
 var height = 500 - margin.top - margin.bottom,
     width = 800 - margin.left - margin.right;
@@ -68,7 +77,7 @@ g.append("g")
 
 d3.json("data/data.json").then(function(data) {
 
-	//clean data
+	//clean data - remove null values and map data to years
 	const formattedData = data.map(function(year) {
 			return year["countries"].filter(function(country) {
 				var dataExists = (country.income && country.life_exp);
@@ -80,29 +89,36 @@ d3.json("data/data.json").then(function(data) {
 			})
 	});
 
-	console.log(formattedData);
+  //Set the interval to update the data for the circles
 
   d3.interval(function(d) {
+
+    //if the time variable exceeds 214, make sure it gets reset
+    //We have data for years 1800-2014
     if (time == 215)
     {
       time = 0;
     }
 
     createCircles(formattedData);
-  }, 1000);
+  }, 400);
 
 });
 
 
+//This function creates the circles with the appropriate attributes
 function createCircles(formattedData)
 {
+  //Select all circles and set the data to the correct data
+  //from the current year
 	var circles = g.selectAll("circle").
 	             data(formattedData[time], function(d) {
 		               return d.country;
 	             });
 
+  //Transition the circles and set new attributes
 	circles.transition()
-     .duration(500)
+     .duration(200)
 		 .attr("class", "enter")
 		 .attr("fill", function(d) {
 			 return continentColor(d.continent); })
@@ -111,42 +127,16 @@ function createCircles(formattedData)
 		 .attr("r", function(d) {
 			 return Math.sqrt(area(d.population) / Math.PI) });
 
+  //Use the magic enter function
   circles.enter()
-         .append("circle")
-         .attr("class", "enter")
-    		 .attr("fill", function(d) {
-    			 return continentColor(d.continent); })
-    		 .attr("cy", function(d){ return y(d.life_exp); })
-    		 .attr("cx", function(d){ return x(d.income) })
-    		 .attr("r", function(d) {
-    			 return Math.sqrt(area(d.population) / Math.PI) });
+         .append("circle");
 
   circles.exit()
-         .transition()
-         .duration(500)
          .remove();
 
+  //Set the current year label to the correct year
   var currentYear = 1800 + time;
   timeLabel.text(currentYear);
+  //Increment time variable by one year
   time = time + 1;
 }
-	/*
-	d3.interval(function() {
-		update(newData);
-	}, 100);
-})
-/*
-
-/*
-function updateData(data) {
-	var circle = g.selectAll("circle")
-						.data(data, function(d) {
-							return d.
-						};
-
-*/
-/*
-	circle.exit()
-			.attr("fill", "red")
-			.remove();
-      */
