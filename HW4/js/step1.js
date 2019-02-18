@@ -75,6 +75,28 @@ g.append("g")
     .attr("class", "y axis")
     .call(yAxisCall);
 
+var legend = g.append("g")
+              .attr("transform", "translate(" + (width - 10) + "," + (height - 125) + ")");
+
+var continents = ["Asia", "Africa", "Americas", "Europe"];
+
+continents.forEach(function(continent, i) {
+    var legendrow = legend.append("g")
+                          .attr("transform", "translate(0, " + (i*20) + ")");
+    
+    legendrow.append("rect")
+             .attr("width", 10)
+             .attr("height", 10)
+             .attr("fill", continentColor(continent));
+    
+    legendrow.append("text")
+             .attr("x", -10)
+             .attr("y", 10)
+             .attr("text-anchor", "end")
+             .style("text-transform", "capitalize")
+             .text(continent);
+});
+
 d3.json("data/data.json").then(function(data) {
 
 	//clean data - remove null values and map data to years
